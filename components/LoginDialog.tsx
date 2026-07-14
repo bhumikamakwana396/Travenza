@@ -22,40 +22,41 @@ const LoginDialog = ({ open, setOpen, openSignup }: any) => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    setError("");
-    setLoading(true);
+  setError("");
+  setLoading(true);
 
-    try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+  try {
+    const response = await fetch("http://localhost:8080/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
 
-      const data = await response.json();
+    if (response.ok) {
+      const user = await response.json();
 
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(user));
 
-        setOpen(false);
+      setOpen(false);
 
-        router.push("/dashboard"); // User Dashboard
-      } else {
-        setError(data.message || "Invalid email or password.");
-      }
-    } catch (error) {
-      setError("Server error. Please try again.");
-    } finally {
-      setLoading(false);
+      router.push("/dashboard");
+    } else {
+      const message = await response.text();
+      setError(message);
     }
+  } catch (err) {
+    console.error(err);
+    setError("Unable to connect to the server.");
+  } finally {
+    setLoading(false);
+  }
   };
 
   return (
@@ -97,7 +98,7 @@ const LoginDialog = ({ open, setOpen, openSignup }: any) => {
             />
 
             {error && (
-              <p className="text-red-500 text-sm text-center">
+              <p className="text-red-700 text-center font-semibold">
                 {error}
               </p>
             )}

@@ -31,17 +31,17 @@ const SignupDialog = ({ open, setOpen, openLogin }: any) => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch("http://localhost:8080/user/signUp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
-          phoneNumber,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+          phoneNumber: phoneNumber,
         }),
       });
 
@@ -133,11 +133,11 @@ const SignupDialog = ({ open, setOpen, openLogin }: any) => {
             />
 
             {message && (
-              <p className="text-green-600 text-center">{message}</p>
+              <p className="text-purple-700 text-center">{message}</p>
             )}
 
             {error && (
-              <p className="text-red-600 text-center">{error}</p>
+              <p className="text-red-500 text-center">{error}</p>
             )}
 
             <Button

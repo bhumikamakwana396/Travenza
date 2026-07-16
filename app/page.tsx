@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import AIChat from "@/components/AIChat";
 import Navbar from "@/components/Navbar";
@@ -12,9 +13,12 @@ import {
 } from "lucide-react";
 import BackToTop from "@/components/ArrowUp";
 import ContactUsDialog from "@/components/ContactUsDialog";
+import { useEffect } from "react";
+import { useRouter } from "next/dist/client/components/navigation";
 
 
 export default function Home() {
+ 
   return (
     <main className="min-h-screen">
       

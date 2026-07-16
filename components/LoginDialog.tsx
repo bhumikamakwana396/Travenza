@@ -22,41 +22,45 @@ const LoginDialog = ({ open, setOpen, openSignup }: any) => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-  setError("");
-  setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8080/user/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email, password,
+          }),
+        });
 
-  try {
-    const response = await fetch("http://localhost:8080/user/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+      if (response.ok) {
+        const user = await response.json();
 
-    if (response.ok) {
-      const user = await response.json();
+        localStorage.setItem("user", JSON.stringify(user));
 
-      localStorage.setItem("user", JSON.stringify(user));
+        setOpen(false);
 
-      setOpen(false);
+        window.location.reload();
 
-      router.push("/dashboard");
-    } else {
-      const message = await response.text();
-      setError(message);
+        router.push("/dashboard");
+      }
+      else {
+        const message = await response.text();
+        setError(message);
+      }
     }
-  } catch (err) {
-    console.error(err);
-    setError("Unable to connect to the server.");
-  } finally {
-    setLoading(false);
-  }
+    catch (err) {
+      console.error(err);
+      setError("Unable to connect to the server.");
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
